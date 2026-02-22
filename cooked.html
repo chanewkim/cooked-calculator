@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Am I Cooked Calculator</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #ff4757;
+            margin-bottom: 5px;
+            font-size: 2.5rem;
+        }
+        p.subtitle {
+            color: #a4b0be;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #dfe4ea;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #2f3542;
+            border-radius: 8px;
+            background-color: #2f3542;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #ff4757;
+        }
+        button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #ff6b81;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        .cooked {
+            background-color: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+            border: 1px solid #ff4757;
+            animation: shake 0.5s;
+        }
+        .safe {
+            background-color: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+            border: 1px solid #2ed573;
+        }
+        
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Am I Cooked?</h1>
+        <p class="subtitle">The academic doom calculator</p>
+
+        <div class="input-group">
+            <label for="currentGrade">Current Grade (%)</label>
+            <input type="number" id="currentGrade" placeholder="e.g. 72" min="0" max="150">
+        </div>
+
+        <div class="input-group">
+            <label for="gradeLeft">Coursework Remaining (%)</label>
+            <input type="number" id="gradeLeft" placeholder="e.g. 30 (for a 30% final)" min="0" max="100">
+        </div>
+
+        <div class="input-group">
+            <label for="timeLeft">Time Left (Hours)</label>
+            <input type="number" id="timeLeft" placeholder="e.g. 12" min="0">
+        </div>
+
+        <button onclick="calculateDoom()">ASSESS MY DOOM</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateDoom() {
+            const currentGrade = parseFloat(document.getElementById('currentGrade').value);
+            const gradeLeft = parseFloat(document.getElementById('gradeLeft').value);
+            const timeLeft = parseFloat(document.getElementById('timeLeft').value);
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(currentGrade) || isNaN(gradeLeft) || isNaN(timeLeft)) {
+                alert("Bro, you can't even fill out the form right. You are definitely cooked.");
+                return;
+            }
+
+            // Calculate the maximum possible grade if they get a 100% on everything left
+            const currentWeight = 100 - gradeLeft;
+            const maxPossibleGrade = ((currentGrade * currentWeight) / 100) + gradeLeft;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = ''; 
+
+            let message = "";
+
+            if (currentGrade >= 97) {
+                resultDiv.classList.add('safe');
+                message = `Max possible: ${maxPossibleGrade.toFixed(1)}%.<br><br>You're actually chilling. Keep doing you, nerd. You are RAW, not cooked.`;
+            } else if (maxPossibleGrade < 92) {
+                resultDiv.classList.add('cooked');
+                message = `Max possible: ${maxPossibleGrade.toFixed(1)}%.<br><br>YOU ARE DEEP FRIED. 💀<br>Mathematically, you can't even get an A anymore. There is absolutely NO time to lock in. Better start looking at McDonald's applications.`;
+            } else {
+                resultDiv.classList.add('cooked');
+                message = `Max possible: ${maxPossibleGrade.toFixed(1)}%.<br><br>YOU ARE COOKED. 🍳<br>Sure, it's *mathematically* possible to clutch up, but look at your current grade (${currentGrade}%). Let's be real, there is no time to lock in. It's so over.`;
+            }
+
+            if (timeLeft < 24 && currentGrade < 90) {
+                message += `<br><br><em>Update: You have ${timeLeft} hours left? Yeah, just go to sleep bro. GG.</em>`;
+            }
+
+            resultDiv.innerHTML = message;
+        }
+    </script>
+
+</body>
+</html>
